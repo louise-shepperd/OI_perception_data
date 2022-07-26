@@ -32,7 +32,26 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 ```
 
-## Introduction
+### Introduction
 
-This document offers an exploratory overview of quantitative data from the debrief questionnaire for the two language groups.
+This document offers an exploratory overview of quantitative data from the debrief questionnaire for the two language groups.This will also be explored in relation to participant demographic information and performance on the audiovisual matching task.
+
+The research questions are as follows:
+
+***RQ 2: What influence of written input are learners aware of regarding word learning?***
+
+*2.1: What was the perceived influence of written input on their learning in the study?*  
+
+*2.2: What were participants' beliefs around the importance of written input when learning new words more broadly?*
+
+This document will explore each of these questions in turn.
+
+### RQ 2.1  Perception of OI influence in the study
+
+
+
+
+### RQ 2.2  Perception of OI influence in general
+
+
 
