@@ -14,19 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(dplyr)
-library(ggplot2)
 library(knitr)
-library(papaja)
-library(htmlTable)
-library(magrittr)
-library(Gmisc)
-library(patchwork)
-library(corrplot)
-library(forcats)
-library(vtable)
-
-theme_set(theme_apa())
-
 
 # colour palettes for plots http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
