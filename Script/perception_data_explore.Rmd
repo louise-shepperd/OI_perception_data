@@ -46,9 +46,72 @@ The research questions are as follows:
 
 This document will explore each of these questions in turn.
 
+```{r readData, include=FALSE, message=FALSE, warning=FALSE}
+OI_infl_df <- read.delim(here("Data", "OI_influence_ID.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+
+OI_infl_df2 <- read.delim(here("Data", "OI_influence_OI.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+
+OI_infl_df3 <- read.delim(here("Data", "OI_influence_OI_Contrast.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+```
+
+```{r dataClean, include=FALSE, message=FALSE, warning=FALSE}
+#str(OI_infl_df)
+
+names(OI_infl_df)[1]<- "ID"
+
+OI_infl_df$ID<-as.factor(OI_infl_df$ID)
+OI_infl_df$see_OI<-as.factor(OI_infl_df$see_OI)
+OI_infl_df$see_arabic<-as.factor(OI_infl_df$see_arabic)
+OI_infl_df$see_english<-as.factor(OI_infl_df$see_english)
+OI_infl_df$no_spell<-as.factor(OI_infl_df$no_spell)
+OI_infl_df$spelling.preference<-as.factor(OI_infl_df$spelling.preference)
+OI_infl_df$OI.importance<-as.factor(OI_infl_df$OI.importance)
+OI_infl_df$vision.hearing<-as.factor(OI_infl_df$vision.hearing)
+OI_infl_df$headphones<-as.factor(OI_infl_df$headphones)
+OI_infl_df$gender<-as.factor(OI_infl_df$gender)
+OI_infl_df$education<-as.factor(OI_infl_df$education)
+OI_infl_df$nationality<-as.factor(OI_infl_df$nationality)
+OI_infl_df$location<-as.factor(OI_infl_df$location)
+OI_infl_df$L1<-as.factor(OI_infl_df$L1)
+OI_infl_df$level<-as.factor(OI_infl_df$level)
+OI_infl_df$same_day<-as.factor(OI_infl_df$same_day)
+OI_infl_df$Participant.Device.Type<-as.factor(OI_infl_df$Participant.Device.Type)
+OI_infl_df$correct<-as.factor(OI_infl_df$correct)
+
+#rename and relevel
+
+OI_infl_df$see_OI = factor(OI_infl_df$see_OI, levels = c("start", "middle", "end", "no_see"), ordered = TRUE)
+
+OI_infl_df$education = factor(OI_infl_df$education, levels = c("primary", "secondary", "professional qualification", "bachelors", "masters", "doctorate"), ordered = TRUE)
+
+OI_infl_df$level = factor(OI_infl_df$level, levels = c("none", "beginner", "intermediate", "advanced", "nearnative"), ordered = TRUE)
+```
+
 ### RQ 2.1  Perception of OI influence in the study
 
+#### First notice OI
 
+First of all, it was of interest to know whether or not people noticed the written forms, as some people mentioned durng piloting that they didn't see the written words or noticed them midway through word learning.
+
+```{r seeOI-plot, echo=FALSE, message=FALSE, warning=FALSE}
+plot_seeOI <- ggplot(data = OI_infl_df) +
+  geom_bar(mapping = aes(x=see_OI, fill = L1))+
+  theme_minimal() +
+  facet_grid(.~L1)+
+  labs(x="When did you first notice the English or Arabic spelling?", y="Count", title="When participants first noticed OI by L1")
+
+plot_seeOI
+```
+
+#### OI preference
+
+```{r OI-pref-table, echo=FALSE, message=FALSE, warning=FALSE}
+
+OI_pref_tb <- select(OI_infl_df, see_english, see_arabic, no_spell, spelling.preference, L1)
+
+st(OI_pref_tb, group = "L1")
+
+```
 
 
 ### RQ 2.2  Perception of OI influence in general
