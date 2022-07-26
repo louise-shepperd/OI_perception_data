@@ -507,11 +507,13 @@ OI_influence_match_OI_Contrast &lt;- merge(OI_influence_demo, match_data_OI_Cont
 <p>3 new files created for analysis - but might come back to this after
 playing around with them a bit more. I’ll see which one is the best fit
 for the analysis.</p>
-<pre class="r"><code>write.csv(OI_influence_match_ID, here(&quot;Data&quot;, &quot;OI_influence_ID.csv&quot;), row.names = FALSE)
+<pre class="r"><code>#write_excel_csv displays Arabic letter better than write.csv
 
-write.csv(OI_influence_match_OI, here(&quot;Data&quot;, &quot;OI_influence_OI.csv&quot;), row.names = FALSE)
+write_excel_csv(OI_influence_match_ID, here(&quot;Data&quot;, file = &quot;OI_influence_ID.csv&quot;))
 
-write.csv(OI_influence_match_OI_Contrast, here(&quot;Data&quot;, &quot;OI_influence_OI_Contrast.csv&quot;), row.names = FALSE)</code></pre>
+write_excel_csv(OI_influence_match_OI, here(&quot;Data&quot;, file = &quot;OI_influence_OI.csv&quot;))
+
+write_excel_csv(OI_influence_match_OI_Contrast, here(&quot;Data&quot;,file = &quot;OI_influence_OI_Contrast.csv&quot;))</code></pre>
 </div>
 
 
