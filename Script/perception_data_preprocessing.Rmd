@@ -1,0 +1,209 @@
+---
+title: "Perception data preprocessing"
+author: "Louise Shepperd"
+date: "`r Sys.Date()`"
+output: 
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(papaja)
+library(htmlTable)
+library(magrittr)
+library(Gmisc)
+library(patchwork)
+library(corrplot)
+library(forcats)
+library(vtable)
+
+theme_set(theme_apa())
+
+
+# colour palettes for plots http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+```
+
+### Introduction
+
+This document outlines the steps to process participant responses from the debrief questionnaire. This includes the extraction of responses relevant to how participants percieved the influence of orthographic input during the study, as well as thier learning more broadly. The structure of the document is as follows:
+
+1. adjusting names and labels of debrief questionnaire data  
+2. merging data with demographic information  
+3. merging data with audiovisual task accuracy and RT  
+
+*raw data was initially cleaned and reformatted into the current data files in excel
+
+In order to explore and process the learner perception data, data from (1) the debrief questionnaire, (2) demographic questionnaire, and (3) matching task are read into the project.
+
+```{r readData, message=FALSE, warning=FALSE}
+debrief_data <- read.delim(here("Data", "debrief_questionnaire_combo_clean.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+demo_data <- read.delim(here("Data", "raw_demographic_data.csv"), header = TRUE, sep = ',')
+match_data  <- read.delim(here("Data", "raw_match_data.csv"), header = TRUE, sep = ',')
+```
+
+### Cleaning 
+
+Start with renaming the first column to "ID" for all the data frames, as this will be used to merge them later on. 
+
+```{r renameID, message=FALSE, warning=FALSE}
+
+#rename first column to ID
+names(debrief_data)[1]<- "ID"
+names(demo_data)[1]<- "ID"
+names(match_data)[1]<- "ID"
+```
+
+Next, check the data types across all the data frames and correct where necessary.
+
+```{r dataTypes, message=FALSE, warning=FALSE}
+
+#debrief data types
+#str(debrief_data)
+
+debrief_data$ID<-as.factor(debrief_data$ID)
+debrief_data$see_OI<-as.factor(debrief_data$see_OI)
+debrief_data$see_arabic<-as.factor(debrief_data$see_arabic)
+debrief_data$see_english<-as.factor(debrief_data$see_english)
+debrief_data$no_spell<-as.factor(debrief_data$no_spell)
+debrief_data$spelling.preference<-as.factor(debrief_data$spelling.preference)
+debrief_data$OI.importance<-as.factor(debrief_data$OI.importance)
+
+#demo data types
+#str(demo_data)
+
+demo_data$ID<-as.factor(demo_data$ID)
+demo_data$vision.hearing<-as.factor(demo_data$vision.hearing)
+demo_data$headphones<-as.factor(demo_data$headphones)
+demo_data$gender<-as.factor(demo_data$gender)
+demo_data$nationality<-as.factor(demo_data$nationality)
+demo_data$location<-as.factor(demo_data$location)
+demo_data$education<-as.factor(demo_data$education)
+demo_data$L1<-as.factor(demo_data$L1)
+demo_data$dialect<-as.factor(demo_data$dialect)
+demo_data$level<-as.factor(demo_data$level)
+
+#match data types
+#str(match_data)
+
+match_data$ID<-as.factor(match_data$ID)
+match_data$Participant.Device.Type<-as.factor(match_data$Participant.Device.Type)
+match_data$Match<-as.factor(match_data$Match)
+match_data$Contrast<-as.factor(match_data$Contrast)
+match_data$OI<-as.factor(match_data$OI)
+match_data$Correct<-as.factor(match_data$Correct)
+```
+
+Then, change labels, levels and variables where necessary. 
+
+```{r dataLabels, message=FALSE, warning=FALSE}
+
+#debrief data labels
+names(debrief_data)[6]<-"OI.influence.open"
+
+#demo data labels
+demo_data$education = factor(demo_data$education, 
+                             levels=c("primary", "secondary", 
+                                      "professional qualification", "bachelors", 
+                                      "masters", "doctorate"), 
+                             ordered=TRUE)
+
+demo_data$level = factor(demo_data$level, 
+                         levels=c("none", "beginner", "intermediate", 
+                                  "advanced", "nearnative"), 
+                         ordered=TRUE)
+
+#match data labels
+levels(match_data$Correct) <- c("Incorrect", "Correct") 
+
+levels(match_data$Match)<-c("mismatch", "match")
+
+levels(match_data$OI)<-c("Arabic","English","no")
+```
+
+### Merging demographic information
+
+Start with new debrief df, which has only the necessary variables focussing on percieved orthographic influence.
+
+```{r OI-influence-df, message=FALSE, warning=FALSE}
+
+OI_influence_df <- select(debrief_data, ID, see_OI, see_arabic, see_english, no_spell, OI.influence.open, spelling.preference, OI.importance, OI.open)
+```
+
+Next, create a new demographic df, which has only the necessary variables.
+
+```{r demo-df-short, message=FALSE, warning=FALSE}
+
+demo_data_short <- select(demo_data, ID, vision.hearing, prop_distraction, headphones, age, gender, education, nationality, location, L1, readingprofscore, level, prof_test_score, same_day)
+```
+
+Merge the two files by participant ID.
+
+```{r OI-influence-demo, message=FALSE, warning=FALSE}
+
+OI_influence_demo <- merge(OI_influence_df, demo_data_short, by="ID")
+```
+
+### Merging match task performance
+
+As the data will be explored more descriptively initially, correct scores, d' and RT are aggregated by participant before being merged with the new debrief df.
+
+```{r match-df-short, message=FALSE, warning=FALSE}
+
+right_match <- filter(match_data, Correct == "Correct")
+
+#by ID, OI and contrast, may be useful later
+match_data_OI_Contrast <- right_match%>%
+  group_by(ID, Participant.Device.Type, Contrast, OI) %>%
+  summarise(meanRT=mean(Reaction.Time), meanD.prime=mean(d.prime), correct=n())
+
+#by ID and OI, may be useful later
+match_data_OI <- right_match%>%
+  group_by(ID, Participant.Device.Type, OI) %>%
+  summarise(meanRT=mean(Reaction.Time), meanD.prime=mean(d.prime), correct=n())
+
+#by just ID
+match_data_ID <- right_match%>%
+  group_by(ID, Participant.Device.Type) %>%
+  summarise(meanRT=mean(Reaction.Time), meanD.prime=mean(d.prime), correct=n())
+```
+
+Add the simple ID only match df to the new debrief df with demo data included
+
+```{r r OI-influence-match-ID, message=FALSE, warning=FALSE}
+
+OI_influence_match_ID <- merge(OI_influence_demo, match_data_ID, by="ID")
+```
+
+Create two further dfs which include accuracy and RT by OI and then by contrast as well, as these is likely to useful for later analysis. Particularly after exploring quantitative and qualitative responses.
+
+```{r r OI-influence-match-OI, message=FALSE, warning=FALSE}
+
+OI_influence_match_OI <- merge(OI_influence_demo, match_data_OI, by="ID")
+
+OI_influence_match_OI_Contrast <- merge(OI_influence_demo, match_data_OI_Contrast, by="ID")
+```
+
+## Output data for analysis
+
+3 new files created for analysis - but might come back to this after playing around with them a bit more. I'll see which one is the best fit for the analysis.
+
+```{r write-perception-df, message=FALSE, warning=FALSE}
+
+write.csv(OI_influence_match_ID, here("Data", "OI_influence_ID.csv"), row.names = FALSE)
+
+write.csv(OI_influence_match_OI, here("Data", "OI_influence_OI.csv"), row.names = FALSE)
+
+write.csv(OI_influence_match_OI_Contrast, here("Data", "OI_influence_OI_Contrast.csv"), row.names = FALSE)
+```
+
+
