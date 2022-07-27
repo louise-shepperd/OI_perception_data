@@ -105,6 +105,8 @@ plot_seeOI
 
 #### OI preference
 
+The table below offers a summary of the variables regarding learner perception of OI during the study.
+
 ```{r OI-pref-table, echo=FALSE, message=FALSE, warning=FALSE}
 
 OI_pref_tb <- select(OI_infl_df, see_english, see_arabic, no_spell, spelling.preference, L1)
@@ -113,8 +115,59 @@ st(OI_pref_tb, group = "L1")
 
 ```
 
+```{r OI-pref-plots, echo=FALSE, message=FALSE, warning=FALSE}
 
-### RQ 2.2  Perception of OI influence in general
+plot_spellingPref <- ggplot(data = OI_infl_df) +
+  geom_bar(mapping = aes(x=spelling.preference, fill = L1))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  facet_grid(.~L1)+
+  scale_y_continuous(name="no. participants", limits = c(0,115))+
+  labs(x="Preference and see all of words…", y="Count", title="Overall spelling preference")
 
 
+plot_seeEnglish <- ggplot(data = OI_infl_df) +
+  geom_bar(mapping = aes(x=see_english, fill = L1))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  facet_grid(.~L1)+
+  scale_y_continuous(name="no. participants", limits = c(0,115))+
+  labs(x="Seeing the words written in English letters…", y="Count", title="Percieved influence of English OI")
+
+plot_seeArabic <- ggplot(data = OI_infl_df) +
+  geom_bar(mapping = aes(x=see_arabic, fill = L1))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  facet_grid(.~L1)+
+  scale_y_continuous(name="no. participants", limits = c(0,115))+
+  labs(x="Seeing the words written in Arabic letters…", y="Count", title="Percieved influence of Arabic OI")
+
+plot_noSpell <- ggplot(data = OI_infl_df) +
+  geom_bar(mapping = aes(x=no_spell, fill = L1))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  facet_grid(.~L1)+
+  scale_y_continuous(name="no. participants", limits = c(0,115))+
+  labs(x="Hearing the words without the spelling…", y="Count", title="Percieved influence of no OI")
+
+plot_spellingPref+plot_seeEnglish + plot_seeArabic + plot_noSpell
+
+```
+
+
+### RQ 2.2  Perception of OI importance in general
+
+```{r OI-import-plot, echo=FALSE, message=FALSE, warning=FALSE}
+plot_OI_import <- ggplot(data = OI_infl_df) +
+  geom_bar(mapping = aes(x=OI.importance, fill = L1))+
+  theme_minimal() +
+  facet_grid(.~L1)+
+  labs(title="In general, when learning new words do you think it is important to see the spelling the first time you hear it?")
+
+plot_OI_import
+```
 
