@@ -105,7 +105,7 @@ plot_seeOI
 
 #### OI preference
 
-The table below offers a summary of the variables regarding learner perception of OI during the study.
+The table and plots below offers a summary of the variables regarding learner perception of OI during the study.
 
 ```{r OI-pref-table, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -157,6 +157,50 @@ plot_noSpell <- ggplot(data = OI_infl_df) +
 plot_spellingPref+plot_seeEnglish + plot_seeArabic + plot_noSpell
 
 ```
+
+In order to see how L1 Arabic preferences related to L2 English experience, they were plotted against proficiency test score.
+
+```{r plot-OIpref-prof, echo=FALSE, message=FALSE, warning=FALSE}
+
+OI_infl_df_ar <- filter(OI_infl_df, L1 == "Arabic")
+
+plot_arPref1 <- ggplot(data = OI_infl_df_ar) +
+  geom_jitter(mapping = aes(x=spelling.preference, y=prof_test_score, color = spelling.preference))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  scale_y_continuous(name="Proficiency score", limits = c(0,12))+
+  labs(x="Preference to see the words...", title="OI preference by proficiency")
+
+
+plot_arPref2 <- ggplot(data = OI_infl_df_ar) +
+  geom_jitter(mapping = aes(x=see_english, y=prof_test_score, color = see_english))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  scale_y_continuous(name="Proficiency score", limits = c(0,12))+
+  labs(x="Seeing the words in English...", title="English OI influence by proficiency")
+
+plot_arPref3 <- ggplot(data = OI_infl_df_ar) +
+  geom_jitter(mapping = aes(x=see_arabic, y=prof_test_score, color = see_arabic))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  scale_y_continuous(name="Proficiency score", limits = c(0,12))+
+  labs(x="Seeing the words in Arabic...", title="Arabic OI influence by proficiency")
+
+plot_arPref4 <- ggplot(data = OI_infl_df_ar) +
+  geom_jitter(mapping = aes(x=no_spell, y=prof_test_score, color = no_spell))+
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90))+
+  scale_y_continuous(name="Proficiency score", limits = c(0,12))+
+  labs(x="Hearing the words without the spelling...", title="no OI influence by proficiency")
+
+plot_arPref1 + plot_arPref2 + plot_arPref3 + plot_arPref4
+
+```
+
 
 
 ### RQ 2.2  Perception of OI importance in general
