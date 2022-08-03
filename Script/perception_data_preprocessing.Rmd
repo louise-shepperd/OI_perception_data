@@ -15,6 +15,7 @@ library(tidyverse)
 library(here)
 library(dplyr)
 library(knitr)
+library(vtable)
 
 # colour palettes for plots http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
@@ -181,6 +182,75 @@ OI_influence_match_OI <- merge(OI_influence_demo, match_data_OI, by="ID")
 OI_influence_match_OI_Contrast <- merge(OI_influence_demo, match_data_OI_Contrast, by="ID")
 ```
 
+## Exclusions
+
+calculate exclusions based on same criteria as word learning and matching data.
+
+```{r exclusions, message=FALSE, warning=FALSE}
+exclusions <- OI_influence_match_ID[OI_influence_match_ID$age < 16 |
+                                      OI_influence_match_ID$age > 65 |
+                                      OI_influence_match_ID$ID =="5499551" | 
+                                      OI_influence_match_ID$ID == "5499733" |
+                                      OI_influence_match_ID$ID == "5341798" |
+                                      OI_influence_match_ID$ID == "5212696" |
+                                      OI_influence_match_ID$ID == "5015265" |
+                                      OI_influence_match_ID$ID == "5320764" |
+                                      (OI_influence_match_ID$L1=="English" & OI_influence_match_ID$readingprofscore>0) |
+                                      (OI_influence_match_ID$prop_distraction > mean(OI_influence_match_ID$prop_distraction) + (sd(OI_influence_match_ID$prop_distraction)*2.5) |
+                                         OI_influence_match_ID$same_day==0),]
+```
+
+Now create a new data frame without exclusions
+
+```{r finaldataDf, message=FALSE, warning=FALSE}
+OI_influence_ID <- OI_influence_match_ID[!(OI_influence_match_ID$age < 16 |
+                                             OI_influence_match_ID$age > 65 |
+                                             OI_influence_match_ID$ID =="5499551" |
+                                             OI_influence_match_ID$ID == "5499733" |
+                                             OI_influence_match_ID$ID == "5341798" |
+                                             OI_influence_match_ID$ID == "5212696" |
+                                             OI_influence_match_ID$ID == "5015265" |
+                                             OI_influence_match_ID$ID == "5320764"|
+                                             (OI_influence_match_ID$L1=="English" & OI_influence_match_ID$readingprofscore>0) |
+                                             (OI_influence_match_ID$prop_distraction > mean(OI_influence_match_ID$prop_distraction) + (sd(OI_influence_match_ID$prop_distraction)*2.5) |
+                                              OI_influence_match_ID$same_day==0)),]
+
+#data frame with OI
+OI_influence_OI <- OI_influence_match_OI[!(OI_influence_match_OI$age < 16 |
+                                             OI_influence_match_OI$age > 65 |
+                                             OI_influence_match_OI$ID =="5499551" |
+                                             OI_influence_match_OI$ID == "5499733" |
+                                             OI_influence_match_OI$ID == "5341798" |
+                                             OI_influence_match_OI$ID == "5212696" |
+                                             OI_influence_match_OI$ID == "5015265" |
+                                             OI_influence_match_OI$ID == "5320764"|
+                                             (OI_influence_match_OI$L1=="English" & OI_influence_match_OI$readingprofscore>0) |
+                                             (OI_influence_match_OI$prop_distraction > mean(OI_influence_match_OI$prop_distraction) + (sd(OI_influence_match_OI$prop_distraction)*2.5) |
+                                              OI_influence_match_OI$same_day==0)),]
+
+#data frame with contrast
+
+OI_influence_OI_Contrast <- OI_influence_match_OI_Contrast[!(OI_influence_match_OI_Contrast$age < 16 |
+                                             OI_influence_match_OI_Contrast$age > 65 |
+                                             OI_influence_match_OI_Contrast$ID =="5499551" |
+                                             OI_influence_match_OI_Contrast$ID == "5499733" |
+                                             OI_influence_match_OI_Contrast$ID == "5341798" |
+                                             OI_influence_match_OI_Contrast$ID == "5212696" |
+                                             OI_influence_match_OI_Contrast$ID == "5015265" |
+                                             OI_influence_match_OI_Contrast$ID == "5320764"|
+                                             (OI_influence_match_OI_Contrast$L1=="English" & OI_influence_match_OI_Contrast$readingprofscore>0) |
+                                             (OI_influence_match_OI_Contrast$prop_distraction > mean(OI_influence_match_OI_Contrast$prop_distraction) + (sd(OI_influence_match_OI_Contrast$prop_distraction)*2.5) |
+                                              OI_influence_match_OI_Contrast$same_day==0)),]
+
+
+#collapsed dataframe to see who remains
+OI_influence_ID_summ <-OI_influence_ID %>%
+  group_by(L1, age, gender, education, level, headphones, Participant.Device.Type, prop_distraction, prof_test_score) %>%
+  summarise(count=n())
+
+st(OI_influence_ID_summ, group = "L1")
+```
+
 ## Output data for analysis
 
 3 new files created for analysis - but might come back to this after playing around with them a bit more. I'll see which one is the best fit for the analysis.
@@ -188,11 +258,11 @@ OI_influence_match_OI_Contrast <- merge(OI_influence_demo, match_data_OI_Contras
 ```{r write-perception-df, message=FALSE, warning=FALSE}
 #write_excel_csv displays Arabic letter better than write.csv
 
-write_excel_csv(OI_influence_match_ID, here("Data", file = "OI_influence_ID.csv"))
+write_excel_csv(OI_influence_ID, here("Data", file = "OI_influence_ID.csv"))
 
-write_excel_csv(OI_influence_match_OI, here("Data", file = "OI_influence_OI.csv"))
+write_excel_csv(OI_influence_OI, here("Data", file = "OI_influence_OI.csv"))
 
-write_excel_csv(OI_influence_match_OI_Contrast, here("Data",file = "OI_influence_OI_Contrast.csv"))
+write_excel_csv(OI_influence_OI_Contrast, here("Data",file = "OI_influence_OI_Contrast.csv"))
 ```
 
 
