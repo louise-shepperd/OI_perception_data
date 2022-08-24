@@ -1,0 +1,155 @@
+---
+title: "OI perception data QCA overview"
+author: "Louise Shepperd"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(papaja)
+library(htmlTable)
+library(magrittr)
+library(Gmisc)
+library(patchwork)
+library(corrplot)
+library(forcats)
+library(vtable)
+library(Cairo)
+library(ggwordcloud)
+library(DiagrammeR)
+
+theme_set(theme_apa())
+
+# colour palettes for plots http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+```
+
+### Introduction
+
+This document offers an exploratory overview of QUALITATIVE data from the debrief questionnaire for the two language groups.This will also be explored in relation to participant demographic information and performance on the audiovisual matching task.
+
+The research questions are as follows:
+
+***RQ 2: What influence of written input are learners aware of regarding word learning?***
+
+*2.1: What was the perceived influence of written input on their learning in the study?*  
+
+*2.2: What were participants' beliefs around the importance of written input when learning new words more broadly?*
+
+This document will explore each of these questions in turn.
+
+```{r readData, include=FALSE, message=FALSE, warning=FALSE}
+OI_infl_QCA <- read.delim(here("Data", "OI_influence_QCA_codes.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+```
+
+```{r dataClean, include=FALSE, message=FALSE, warning=FALSE}
+#str(OI_infl_df)
+
+names(OI_infl_QCA)[1]<- "ID"
+
+OI_infl_QCA$ID<-as.factor(OI_infl_QCA$ID)
+OI_infl_QCA$see_OI<-as.factor(OI_infl_QCA$see_OI)
+OI_infl_QCA$see_arabic<-as.factor(OI_infl_QCA$see_arabic)
+OI_infl_QCA$see_english<-as.factor(OI_infl_QCA$see_english)
+OI_infl_QCA$no_spell<-as.factor(OI_infl_QCA$no_spell)
+OI_infl_QCA$spelling.preference<-as.factor(OI_infl_QCA$spelling.preference)
+OI_infl_QCA$resp_lang1<-as.factor(OI_infl_QCA$resp_lang1)
+OI_infl_QCA$general_influence1<-as.factor(OI_infl_QCA$general_influence1)
+OI_infl_QCA$category1<-as.factor(OI_infl_QCA$category1)
+OI_infl_QCA$OI.importance<-as.factor(OI_infl_QCA$OI.importance)
+OI_infl_QCA$category2<-as.factor(OI_infl_QCA$category2)
+OI_infl_QCA$resp_lang2<-as.factor(OI_infl_QCA$resp_lang2)
+OI_infl_QCA$vision.hearing<-as.factor(OI_infl_QCA$vision.hearing)
+OI_infl_QCA$headphones<-as.factor(OI_infl_QCA$headphones)
+OI_infl_QCA$gender<-as.factor(OI_infl_QCA$gender)
+OI_infl_QCA$education<-as.factor(OI_infl_QCA$education)
+OI_infl_QCA$nationality<-as.factor(OI_infl_QCA$nationality)
+OI_infl_QCA$location<-as.factor(OI_infl_QCA$location)
+OI_infl_QCA$L1<-as.factor(OI_infl_QCA$L1)
+OI_infl_QCA$level<-as.factor(OI_infl_QCA$level)
+OI_infl_QCA$same_day<-as.factor(OI_infl_QCA$same_day)
+OI_infl_QCA$Participant.Device.Type<-as.factor(OI_infl_QCA$Participant.Device.Type)
+OI_infl_QCA$correct<-as.factor(OI_infl_QCA$correct)
+
+#rename and relevel
+
+OI_infl_QCA$see_OI = factor(OI_infl_QCA$see_OI, levels = c("start", "middle", "end", "no_see"), ordered = TRUE)
+
+OI_infl_QCA$education = factor(OI_infl_QCA$education, levels = c("primary", "secondary", "professional qualification", "bachelors", "masters", "doctorate"), ordered = TRUE)
+
+OI_infl_QCA$level = factor(OI_infl_QCA$level, levels = c("none", "beginner", "intermediate", "advanced", "nearnative"), ordered = TRUE)
+```
+
+### RQ 2.1  Perception of OI influence in the study
+
+#### Overall OI evaluation
+
+```{r OI-infl-table, echo=FALSE, message=FALSE, warning=FALSE}
+
+OI_influence_tb <- select(OI_infl_QCA,resp_lang1, general_influence1, category1, L1)
+
+st(OI_influence_tb, group = "L1")
+
+```
+
+```{r OI-infl-wordcloud, echo=FALSE, message=FALSE, warning=FALSE}
+
+infl_codes <- OI_infl_QCA %>%
+  group_by(L1, category1, general_influence1)%>%
+  summarise(count=n())
+
+
+infl_wordcloud <-  ggplot(infl_codes, aes(label = category1, color = general_influence1, size = count)) +
+  geom_text_wordcloud_area() +
+  facet_grid(~L1)+
+  scale_size_area(max_size = 140) +
+  theme_minimal() + ggtitle("OI influence Word Cloud") 
+
+infl_wordcloud
+
+infl_plot<- ggplot(data = OI_infl_QCA) +
+  geom_bar(mapping = aes(x = L1, fill = category1), position = "fill")+
+  facet_grid(~general_influence1)+
+  theme_minimal()
+
+infl_plot
+
+infl_polar<- ggplot(data = OI_infl_QCA) +
+  geom_bar(mapping = aes(x = L1, fill = category1), show.legend = FALSE, width = 1)+
+  #facet_grid(~general_influence1)+
+  theme(aspect.ratio = 1)+
+  labs(x = NULL, y = NULL)
+
+infl_polar + coord_polar()
+
+infl_tile<- OI_infl_QCA %>%
+  count(category1, L1) %>%
+  ggplot(mapping = aes(x = L1, y =  category1)) +
+  geom_tile(mapping = aes(fill = n))
+
+infl_tile
+```
+
+```{r OI-infl-plot, echo=FALSE, message=FALSE, warning=FALSE}
+
+OI_influence <- ggplot(OI_infl_QCA, aes(x=L1, y=category1, colour=L1))+
+  geom_count()+
+  theme_minimal()+
+  facet_grid(.~general_influence1)
+
+OI_influence
+```
+
+#### Perceptions of OI influence
+
