@@ -155,13 +155,6 @@ infl_polar<- ggplot(data = OI_infl2) +
   labs(x = NULL, y = NULL)
 
 infl_polar + coord_polar()
-
-infl_tile<- OI_infl2 %>%
-  count(category1, L1) %>%
-  ggplot(mapping = aes(x = L1, y =  category1)) +
-  geom_tile(mapping = aes(fill = n))
-
-infl_tile
 ```
 
 ```{r OI-infl-plot, echo=FALSE, message=FALSE, warning=FALSE}
@@ -254,3 +247,107 @@ treemap(infl_codesEN,
 
 #### Perceptions of OI influence
 
+create new dataset removing responses that couldn't be coded for beliefs about OI importance. 
+
+```{r remove-non-response3,message=FALSE, warning=FALSE}
+
+OI_import1 <- OI_infl_QCA %>% 
+  filter(category2 != "")
+```
+
+```{r OI-infl-table2, echo=FALSE, message=FALSE, warning=FALSE}
+
+OI_importance_tb <- select(OI_import1,resp_lang2, OI.importance, category2,subcategory2, L1)
+
+st(OI_importance_tb, group = "L1")
+```
+
+create another new dataset removing responses that related to the experiment and not learning in general. 
+
+```{r remove-non-response4,message=FALSE, warning=FALSE}
+
+OI_import2  <- OI_import1  %>% 
+  filter(category2 != "(about the experiment)")
+
+OI_importance_tb2 <- select(OI_import2,resp_lang2, OI.importance, category2,subcategory2, L1)
+
+st(OI_importance_tb2, group = "L1")
+```
+
+Treemaps for RQ 2.2
+
+```{r treemap2, echo=FALSE, message=FALSE, warning=FALSE}
+
+infl_codes2 <- OI_import2 %>%
+  group_by(OI.importance, category2,subcategory2, L1)%>%
+  summarise(count=n())
+
+# treemap of all participants
+treemap(infl_codes2,
+            index=c("OI.importance","category2","subcategory2"),
+            vSize="count",
+            type="index",
+        fontsize.labels=c(15,12,10),
+        fontcolor.labels=c("white","white","white"),
+        fontface.labels=c(2,1,3),
+        #bg.labels=c("transparent"),
+        align.labels=list(
+        c("center", "top"),
+        c("center", "center"), 
+        c("right", "bottom")
+        ),          
+        overlap.labels=0.5,
+        border.col=c("white","white", "white"),
+        palette = cbPalette,
+        title = "Treemap of percieved OI importance during early word learning",
+            )
+
+# treemap of Arabic participants
+
+infl_codes2AR <- infl_codes2 %>% 
+  filter(L1!= "English")
+
+treemap(infl_codes2AR,
+            index=c("OI.importance","category2","subcategory2"),
+            vSize="count",
+            type="index",
+        fontsize.labels=c(15,12,10),
+        fontcolor.labels=c("white","white","white"),
+        fontface.labels=c(2,1,3),
+        #bg.labels=c("transparent"),
+        align.labels=list(
+        c("left", "top"),
+        c("center", "center"), 
+        c("right", "top")
+        ),          
+        overlap.labels=0.5,
+        border.col=c("white","white", "white"),
+        palette = cbPalette,
+        title = "Treemap of L1 Arabic percieved OI importance during early word learning",
+            )
+
+# treemap of Arabic participants
+
+infl_codes2EN <- infl_codes2 %>% 
+  filter(L1!= "Arabic")
+
+treemap(infl_codes2EN,
+            index=c("OI.importance","category2","subcategory2"),
+            vSize="count",
+            type="index",
+        fontsize.labels=c(15,12,10),
+        fontcolor.labels=c("white","white","white"),
+        fontface.labels=c(2,1,3),
+        #bg.labels=c("transparent"),
+        align.labels=list(
+        c("left", "top"),
+        c("center", "center"), 
+        c("right", "top")
+        ),          
+        overlap.labels=0.5,
+        border.col=c("white","white", "white"),
+        palette = cbPalette,
+        title = "Treemap of L1 English percieved OI importance during early word learning",
+            )
+
+```
