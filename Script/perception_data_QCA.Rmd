@@ -27,6 +27,7 @@ library(vtable)
 library(Cairo)
 library(ggwordcloud)
 library(DiagrammeR)
+library(treemap)
 
 theme_set(theme_apa())
 
@@ -67,8 +68,10 @@ OI_infl_QCA$spelling.preference<-as.factor(OI_infl_QCA$spelling.preference)
 OI_infl_QCA$resp_lang1<-as.factor(OI_infl_QCA$resp_lang1)
 OI_infl_QCA$general_influence1<-as.factor(OI_infl_QCA$general_influence1)
 OI_infl_QCA$category1<-as.factor(OI_infl_QCA$category1)
+OI_infl_QCA$subcategory1<-as.factor(OI_infl_QCA$subcategory1)
 OI_infl_QCA$OI.importance<-as.factor(OI_infl_QCA$OI.importance)
 OI_infl_QCA$category2<-as.factor(OI_infl_QCA$category2)
+OI_infl_QCA$subcategory2<-as.factor(OI_infl_QCA$subcategory2)
 OI_infl_QCA$resp_lang2<-as.factor(OI_infl_QCA$resp_lang2)
 OI_infl_QCA$vision.hearing<-as.factor(OI_infl_QCA$vision.hearing)
 OI_infl_QCA$headphones<-as.factor(OI_infl_QCA$headphones)
@@ -95,17 +98,37 @@ OI_infl_QCA$level = factor(OI_infl_QCA$level, levels = c("none", "beginner", "in
 
 #### Overall OI evaluation
 
+create new dataset removing responses that couldn't be coded for general evaluation of whether OI was helpful or not. 
+
+```{r remove-non-response1,message=FALSE, warning=FALSE}
+
+OI_infl1 <- OI_infl_QCA %>% 
+  filter(general_influence1 != "")
+```
+
 ```{r OI-infl-table, echo=FALSE, message=FALSE, warning=FALSE}
 
-OI_influence_tb <- select(OI_infl_QCA,resp_lang1, general_influence1, category1, L1)
+OI_influence_tb <- select(OI_infl1,resp_lang1, general_influence1, category1,subcategory1, L1)
 
 st(OI_influence_tb, group = "L1")
-
 ```
+
+create another new dataset removing responses that couldn't be coded for specific type of OI influence. 
+
+```{r remove-non-response2,message=FALSE, warning=FALSE}
+
+OI_infl2 <- OI_infl1 %>% 
+  filter(category1 != "")
+
+OI_influence_tb2 <- select(OI_infl2,resp_lang1, general_influence1, category1,subcategory1, L1)
+
+st(OI_influence_tb2, group = "L1")
+```
+
 
 ```{r OI-infl-wordcloud, echo=FALSE, message=FALSE, warning=FALSE}
 
-infl_codes <- OI_infl_QCA %>%
+infl_codes <- OI_infl2 %>%
   group_by(L1, category1, general_influence1)%>%
   summarise(count=n())
 
@@ -113,19 +136,19 @@ infl_codes <- OI_infl_QCA %>%
 infl_wordcloud <-  ggplot(infl_codes, aes(label = category1, color = general_influence1, size = count)) +
   geom_text_wordcloud_area() +
   facet_grid(~L1)+
-  scale_size_area(max_size = 140) +
+  #scale_size_area(max_size = 40) +
   theme_minimal() + ggtitle("OI influence Word Cloud") 
 
 infl_wordcloud
 
-infl_plot<- ggplot(data = OI_infl_QCA) +
+infl_plot<- ggplot(data = OI_infl2) +
   geom_bar(mapping = aes(x = L1, fill = category1), position = "fill")+
   facet_grid(~general_influence1)+
   theme_minimal()
 
 infl_plot
 
-infl_polar<- ggplot(data = OI_infl_QCA) +
+infl_polar<- ggplot(data = OI_infl2) +
   geom_bar(mapping = aes(x = L1, fill = category1), show.legend = FALSE, width = 1)+
   #facet_grid(~general_influence1)+
   theme(aspect.ratio = 1)+
@@ -133,7 +156,7 @@ infl_polar<- ggplot(data = OI_infl_QCA) +
 
 infl_polar + coord_polar()
 
-infl_tile<- OI_infl_QCA %>%
+infl_tile<- OI_infl2 %>%
   count(category1, L1) %>%
   ggplot(mapping = aes(x = L1, y =  category1)) +
   geom_tile(mapping = aes(fill = n))
@@ -150,6 +173,84 @@ OI_influence <- ggplot(OI_infl_QCA, aes(x=L1, y=category1, colour=L1))+
 
 OI_influence
 ```
+
+```{r treemap1, echo=FALSE, message=FALSE, warning=FALSE}
+
+infl_codes1 <- OI_infl2 %>%
+  group_by(L1, general_influence1, category1, subcategory1)%>%
+  summarise(count=n())
+
+
+# treemap of all participants
+treemap(infl_codes1,
+            index=c("general_influence1","category1","subcategory1"),
+            vSize="count",
+            type="index",
+        fontsize.labels=c(15,12,10),
+        fontcolor.labels=c("white","white","white"),
+        fontface.labels=c(2,1,3),
+        #bg.labels=c("transparent"),
+        align.labels=list(
+        c("center", "top"),
+        c("center", "center"), 
+        c("right", "bottom")
+        ),          
+        overlap.labels=0.5,
+        border.col=c("white","white", "white"),
+        palette = cbPalette,
+        title = "Treemap of percieved OI influence during word learning",
+            )
+
+# treemap of Arabic participants
+
+infl_codesAR <- infl_codes1 %>% 
+  filter(L1!= "English")
+
+treemap(infl_codesAR,
+            index=c("general_influence1","category1","subcategory1"),
+            vSize="count",
+            type="index",
+        fontsize.labels=c(15,12,10),
+        fontcolor.labels=c("white","white","white"),
+        fontface.labels=c(2,1,3),
+        #bg.labels=c("transparent"),
+        align.labels=list(
+        c("left", "top"),
+        c("center", "center"), 
+        c("right", "top")
+        ),          
+        overlap.labels=0.5,
+        border.col=c("white","white", "white"),
+        palette = cbPalette,
+        title = "Treemap of L1 Arabic percieved OI influence during word learning",
+            )
+
+# treemap of Arabic participants
+
+infl_codesEN <- infl_codes1 %>% 
+  filter(L1!= "Arabic")
+
+treemap(infl_codesEN,
+            index=c("general_influence1","category1","subcategory1"),
+            vSize="count",
+            type="index",
+        fontsize.labels=c(15,12,10),
+        fontcolor.labels=c("white","white","white"),
+        fontface.labels=c(2,1,3),
+        #bg.labels=c("transparent"),
+        align.labels=list(
+        c("left", "top"),
+        c("center", "center"), 
+        c("right", "top")
+        ),          
+        overlap.labels=0.5,
+        border.col=c("white","white", "white"),
+        palette = cbPalette,
+        title = "Treemap of L1 English percieved OI influence during word learning",
+            )
+
+```
+
 
 #### Perceptions of OI influence
 
