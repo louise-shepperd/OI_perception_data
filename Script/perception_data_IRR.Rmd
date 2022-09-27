@@ -1,0 +1,101 @@
+---
+title: "OI perception data: Intercoder reliability"
+author: "Louise Shepperd"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(irr)
+library(here)
+
+```
+```{r readData, include=FALSE, message=FALSE, warning=FALSE}
+irr_2.1ar <- read.delim(here("Data", "IRR_2.1ar.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+
+irr_2.2ar <- read.delim(here("Data", "IRR_2.2ar.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+
+irr_2.1en <- read.delim(here("Data", "IRR_2.1en.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+
+irr_2.2en <- read.delim(here("Data", "IRR_2.2ar.csv"), header = TRUE, sep = ',', encoding = 'UTF-8')
+```
+
+## Reshaping the data 
+
+separate coder x content data frame for each variable.
+
+Start off with English data for RQ2.1 and 2.2
+
+```{r reshaping.data.en, warning=FALSE, message=FALSE}
+#English coders general perception of OI input
+en_general_2.1 <- select(irr_2.1en, content_ID, coder_ID, general_code)
+en_general_2.1 <- pivot_wider(en_general_2.1, id_cols = coder_ID, names_from = content_ID, values_from = general_code)
+en_general_2.1 <- select(en_general_2.1, -coder_ID)
+
+#English coders specific perception of OI input
+en_specific_2.1 <- select(irr_2.1en, content_ID, coder_ID, specific_code)
+en_specific_2.1 <- pivot_wider(en_specific_2.1, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
+en_specific_2.1 <- select(en_specific_2.1, -coder_ID)
+
+#English coders specific perception of OI input
+en_specific_2.2 <- select(irr_2.2en, content_ID, coder_ID, specific_code)
+en_specific_2.2 <- pivot_wider(en_specific_2.2, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
+en_specific_2.2 <- select(en_specific_2.2, -coder_ID)
+```
+
+Do the same with the Arabic data
+
+```{r reshaping.data.ar, warning=FALSE, message=FALSE}
+#English coders general perception of OI input
+ar_general_2.1 <- select(irr_2.1ar, content_ID, coder_ID, general_code)
+ar_general_2.1 <- pivot_wider(ar_general_2.1, id_cols = coder_ID, names_from = content_ID, values_from = general_code)
+ar_general_2.1 <- select(ar_general_2.1, -coder_ID)
+
+#English coders specific perception of OI input
+ar_specific_2.1 <- select(irr_2.1ar, content_ID, coder_ID, specific_code)
+ar_specific_2.1 <- pivot_wider(ar_specific_2.1, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
+ar_specific_2.1 <- select(ar_specific_2.1, -coder_ID)
+
+#English coders specific perception of OI input
+ar_specific_2.2 <- select(irr_2.2ar, content_ID, coder_ID, specific_code)
+ar_specific_2.2 <- pivot_wider(ar_specific_2.2, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
+ar_specific_2.2 <- select(ar_specific_2.2, -coder_ID)
+```
+
+## Calculating reliability
+
+Checking the reliability of the coding of each variable. 
+
+Start with English again - for both 2.1 and 2.2
+
+```{r calc.reliability.en, warning=FALSE, message=FALSE}
+
+en_general_2.1 <- as.matrix(en_general_2.1)
+kripp.alpha(en_general_2.1, method = "nominal")
+
+en_specific_2.1 <- as.matrix(en_specific_2.1)
+kripp.alpha(en_specific_2.1, method = "nominal")
+
+en_specific_2.2 <- as.matrix(en_specific_2.2)
+kripp.alpha(en_specific_2.2, method = "nominal")
+```
+
+Then look at Arabic coder scores
+
+```{r calc.reliability.ar, warning=FALSE, message=FALSE}
+
+ar_general_2.1 <- as.matrix(ar_general_2.1)
+kripp.alpha(ar_general_2.1, method = "nominal")
+
+ar_specific_2.1 <- as.matrix(ar_specific_2.1)
+kripp.alpha(ar_specific_2.1, method = "nominal")
+
+ar_specific_2.2 <- as.matrix(ar_specific_2.2)
+kripp.alpha(ar_specific_2.2, method = "nominal")
+```
