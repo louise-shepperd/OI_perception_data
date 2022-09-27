@@ -34,7 +34,7 @@ cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"
 
 ### Introduction
 
-This document offers an exploratory overview of quantitative data from the debrief questionnaire for the two language groups.This will also be explored in relation to participant demographic information and performance on the audiovisual matching task.
+This document offers an exploratory overview of QUANTITATIVE data from the debrief questionnaire for the two language groups.This will also be explored in relation to participant demographic information and performance on the audiovisual matching task.
 
 The research questions are as follows:
 
