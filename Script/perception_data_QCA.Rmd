@@ -184,9 +184,9 @@ treemap(infl_codes1,
         fontface.labels=c(2,1,3),
         #bg.labels=c("transparent"),
         align.labels=list(
-        c("center", "top"),
+        c("left", "top"),
         c("center", "center"), 
-        c("right", "bottom")
+        c("right", "top")
         ),          
         overlap.labels=0.5,
         border.col=c("white","white", "white"),
