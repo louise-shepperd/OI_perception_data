@@ -184,7 +184,7 @@ OI_influence_match_OI_Contrast <- merge(OI_influence_demo, match_data_OI_Contras
 
 ## Exclusions
 
-calculate exclusions based on same criteria as word learning and matching data.
+calculate exclusions based on same criteria as word learning and matching data. Added exclusion of "5440728" who reported reading Farsi in questionnaire.
 
 ```{r exclusions, message=FALSE, warning=FALSE}
 exclusions <- OI_influence_match_ID[OI_influence_match_ID$age < 16 |
@@ -195,6 +195,7 @@ exclusions <- OI_influence_match_ID[OI_influence_match_ID$age < 16 |
                                       OI_influence_match_ID$ID == "5212696" |
                                       OI_influence_match_ID$ID == "5015265" |
                                       OI_influence_match_ID$ID == "5320764" |
+                                      OI_influence_match_ID$ID == "5440728" |
                                       (OI_influence_match_ID$L1=="English" & OI_influence_match_ID$readingprofscore>0) |
                                       (OI_influence_match_ID$prop_distraction > mean(OI_influence_match_ID$prop_distraction) + (sd(OI_influence_match_ID$prop_distraction)*2.5) |
                                          OI_influence_match_ID$same_day==0),]
@@ -211,6 +212,7 @@ OI_influence_ID <- OI_influence_match_ID[!(OI_influence_match_ID$age < 16 |
                                              OI_influence_match_ID$ID == "5212696" |
                                              OI_influence_match_ID$ID == "5015265" |
                                              OI_influence_match_ID$ID == "5320764"|
+                                             OI_influence_match_ID$ID == "5440728"|
                                              (OI_influence_match_ID$L1=="English" & OI_influence_match_ID$readingprofscore>0) |
                                              (OI_influence_match_ID$prop_distraction > mean(OI_influence_match_ID$prop_distraction) + (sd(OI_influence_match_ID$prop_distraction)*2.5) |
                                               OI_influence_match_ID$same_day==0)),]
@@ -224,6 +226,7 @@ OI_influence_OI <- OI_influence_match_OI[!(OI_influence_match_OI$age < 16 |
                                              OI_influence_match_OI$ID == "5212696" |
                                              OI_influence_match_OI$ID == "5015265" |
                                              OI_influence_match_OI$ID == "5320764"|
+                                             OI_influence_match_OI$ID == "5440728"|
                                              (OI_influence_match_OI$L1=="English" & OI_influence_match_OI$readingprofscore>0) |
                                              (OI_influence_match_OI$prop_distraction > mean(OI_influence_match_OI$prop_distraction) + (sd(OI_influence_match_OI$prop_distraction)*2.5) |
                                               OI_influence_match_OI$same_day==0)),]
@@ -238,6 +241,7 @@ OI_influence_OI_Contrast <- OI_influence_match_OI_Contrast[!(OI_influence_match_
                                              OI_influence_match_OI_Contrast$ID == "5212696" |
                                              OI_influence_match_OI_Contrast$ID == "5015265" |
                                              OI_influence_match_OI_Contrast$ID == "5320764"|
+                                              OI_influence_match_OI_Contrast$ID == "5440728" |
                                              (OI_influence_match_OI_Contrast$L1=="English" & OI_influence_match_OI_Contrast$readingprofscore>0) |
                                              (OI_influence_match_OI_Contrast$prop_distraction > mean(OI_influence_match_OI_Contrast$prop_distraction) + (sd(OI_influence_match_OI_Contrast$prop_distraction)*2.5) |
                                               OI_influence_match_OI_Contrast$same_day==0)),]

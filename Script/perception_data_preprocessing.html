@@ -11,7 +11,7 @@
 
 <meta name="author" content="Louise Shepperd" />
 
-<meta name="date" content="2022-08-03" />
+<meta name="date" content="2022-09-30" />
 
 <title>OI perception data preprocessing</title>
 
@@ -589,7 +589,7 @@ pre code {
 
 <h1 class="title toc-ignore">OI perception data preprocessing</h1>
 <h4 class="author">Louise Shepperd</h4>
-<h4 class="date">2022-08-03</h4>
+<h4 class="date">2022-09-30</h4>
 
 </div>
 
@@ -738,6 +738,7 @@ matching data.</p>
                                       OI_influence_match_ID$ID == &quot;5212696&quot; |
                                       OI_influence_match_ID$ID == &quot;5015265&quot; |
                                       OI_influence_match_ID$ID == &quot;5320764&quot; |
+                                      OI_influence_match_ID$ID == &quot;5440728&quot; |
                                       (OI_influence_match_ID$L1==&quot;English&quot; &amp; OI_influence_match_ID$readingprofscore&gt;0) |
                                       (OI_influence_match_ID$prop_distraction &gt; mean(OI_influence_match_ID$prop_distraction) + (sd(OI_influence_match_ID$prop_distraction)*2.5) |
                                          OI_influence_match_ID$same_day==0),]</code></pre>
@@ -750,6 +751,7 @@ matching data.</p>
                                              OI_influence_match_ID$ID == &quot;5212696&quot; |
                                              OI_influence_match_ID$ID == &quot;5015265&quot; |
                                              OI_influence_match_ID$ID == &quot;5320764&quot;|
+                                             OI_influence_match_ID$ID == &quot;5440728&quot;|
                                              (OI_influence_match_ID$L1==&quot;English&quot; &amp; OI_influence_match_ID$readingprofscore&gt;0) |
                                              (OI_influence_match_ID$prop_distraction &gt; mean(OI_influence_match_ID$prop_distraction) + (sd(OI_influence_match_ID$prop_distraction)*2.5) |
                                               OI_influence_match_ID$same_day==0)),]
@@ -763,6 +765,7 @@ OI_influence_OI &lt;- OI_influence_match_OI[!(OI_influence_match_OI$age &lt; 16 
                                              OI_influence_match_OI$ID == &quot;5212696&quot; |
                                              OI_influence_match_OI$ID == &quot;5015265&quot; |
                                              OI_influence_match_OI$ID == &quot;5320764&quot;|
+                                             OI_influence_match_OI$ID == &quot;5440728&quot;|
                                              (OI_influence_match_OI$L1==&quot;English&quot; &amp; OI_influence_match_OI$readingprofscore&gt;0) |
                                              (OI_influence_match_OI$prop_distraction &gt; mean(OI_influence_match_OI$prop_distraction) + (sd(OI_influence_match_OI$prop_distraction)*2.5) |
                                               OI_influence_match_OI$same_day==0)),]
@@ -777,6 +780,7 @@ OI_influence_OI_Contrast &lt;- OI_influence_match_OI_Contrast[!(OI_influence_mat
                                              OI_influence_match_OI_Contrast$ID == &quot;5212696&quot; |
                                              OI_influence_match_OI_Contrast$ID == &quot;5015265&quot; |
                                              OI_influence_match_OI_Contrast$ID == &quot;5320764&quot;|
+                                              OI_influence_match_OI_Contrast$ID == &quot;5440728&quot; |
                                              (OI_influence_match_OI_Contrast$L1==&quot;English&quot; &amp; OI_influence_match_OI_Contrast$readingprofscore&gt;0) |
                                              (OI_influence_match_OI_Contrast$prop_distraction &gt; mean(OI_influence_match_OI_Contrast$prop_distraction) + (sd(OI_influence_match_OI_Contrast$prop_distraction)*2.5) |
                                               OI_influence_match_OI_Contrast$same_day==0)),]
@@ -849,13 +853,13 @@ age
 7.697
 </td>
 <td style="text-align:left;">
-118
+117
 </td>
 <td style="text-align:left;">
-35.212
+35.239
 </td>
 <td style="text-align:left;">
-12.353
+12.402
 </td>
 </tr>
 <tr>
@@ -870,7 +874,7 @@ gender
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-118
+117
 </td>
 <td style="text-align:left;">
 </td>
@@ -890,10 +894,10 @@ gender
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-76
+75
 </td>
 <td style="text-align:left;">
-64.4%
+64.1%
 </td>
 <td style="text-align:left;">
 </td>
@@ -914,7 +918,7 @@ gender
 38
 </td>
 <td style="text-align:left;">
-32.2%
+32.5%
 </td>
 <td style="text-align:left;">
 </td>
@@ -952,7 +956,7 @@ education
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-118
+117
 </td>
 <td style="text-align:left;">
 </td>
@@ -996,7 +1000,7 @@ education
 12
 </td>
 <td style="text-align:left;">
-10.2%
+10.3%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1017,7 +1021,7 @@ education
 15
 </td>
 <td style="text-align:left;">
-12.7%
+12.8%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1038,7 +1042,7 @@ education
 38
 </td>
 <td style="text-align:left;">
-32.2%
+32.5%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1056,10 +1060,10 @@ education
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-41
+40
 </td>
 <td style="text-align:left;">
-34.7%
+34.2%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1080,7 +1084,7 @@ education
 12
 </td>
 <td style="text-align:left;">
-10.2%
+10.3%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1097,7 +1101,7 @@ level
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-117
+116
 </td>
 <td style="text-align:left;">
 </td>
@@ -1117,7 +1121,7 @@ level
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-113
+112
 </td>
 <td style="text-align:left;">
 96.6%
@@ -1221,7 +1225,7 @@ headphones
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-118
+117
 </td>
 <td style="text-align:left;">
 </td>
@@ -1244,7 +1248,7 @@ headphones
 32
 </td>
 <td style="text-align:left;">
-27.1%
+27.4%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1262,10 +1266,10 @@ headphones
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-25
+24
 </td>
 <td style="text-align:left;">
-21.2%
+20.5%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1286,7 +1290,7 @@ headphones
 61
 </td>
 <td style="text-align:left;">
-51.7%
+52.1%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1303,7 +1307,7 @@ Participant.Device.Type
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-118
+117
 </td>
 <td style="text-align:left;">
 </td>
@@ -1323,10 +1327,10 @@ Participant.Device.Type
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-82
+81
 </td>
 <td style="text-align:left;">
-69.5%
+69.2%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1347,7 +1351,7 @@ Participant.Device.Type
 35
 </td>
 <td style="text-align:left;">
-29.7%
+29.9%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1368,7 +1372,7 @@ Participant.Device.Type
 1
 </td>
 <td style="text-align:left;">
-0.8%
+0.9%
 </td>
 <td style="text-align:left;">
 </td>
@@ -1387,13 +1391,13 @@ prop_distraction
 0.275
 </td>
 <td style="text-align:left;">
-118
+117
 </td>
 <td style="text-align:left;">
-0.165
+0.161
 </td>
 <td style="text-align:left;">
-0.231
+0.229
 </td>
 </tr>
 <tr>
@@ -1433,7 +1437,7 @@ count
 0
 </td>
 <td style="text-align:left;">
-118
+117
 </td>
 <td style="text-align:left;">
 1
