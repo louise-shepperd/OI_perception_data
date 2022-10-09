@@ -43,7 +43,7 @@ en_specific_2.1 <- select(irr_2.1en, content_ID, coder_ID, specific_code)
 en_specific_2.1 <- pivot_wider(en_specific_2.1, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
 en_specific_2.1 <- select(en_specific_2.1, -coder_ID)
 
-#English coders specific perception of OI input
+#English coders specific belief of OI importance
 en_specific_2.2 <- select(irr_2.2en, content_ID, coder_ID, specific_code)
 en_specific_2.2 <- pivot_wider(en_specific_2.2, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
 en_specific_2.2 <- select(en_specific_2.2, -coder_ID)
@@ -52,17 +52,17 @@ en_specific_2.2 <- select(en_specific_2.2, -coder_ID)
 Do the same with the Arabic data
 
 ```{r reshaping.data.ar, warning=FALSE, message=FALSE}
-#English coders general perception of OI input
+#Arabic coders general perception of OI input
 ar_general_2.1 <- select(irr_2.1ar, content_ID, coder_ID, general_code)
 ar_general_2.1 <- pivot_wider(ar_general_2.1, id_cols = coder_ID, names_from = content_ID, values_from = general_code)
 ar_general_2.1 <- select(ar_general_2.1, -coder_ID)
 
-#English coders specific perception of OI input
+#Arabic coders specific perception of OI input
 ar_specific_2.1 <- select(irr_2.1ar, content_ID, coder_ID, specific_code)
 ar_specific_2.1 <- pivot_wider(ar_specific_2.1, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
 ar_specific_2.1 <- select(ar_specific_2.1, -coder_ID)
 
-#English coders specific perception of OI input
+#Arabic coders specific belief of OI importance
 ar_specific_2.2 <- select(irr_2.2ar, content_ID, coder_ID, specific_code)
 ar_specific_2.2 <- pivot_wider(ar_specific_2.2, id_cols = coder_ID, names_from = content_ID, values_from = specific_code)
 ar_specific_2.2 <- select(ar_specific_2.2, -coder_ID)
