@@ -170,7 +170,11 @@ plot_arPref1 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Preference to see the words...", title="OI preference by proficiency")
+  labs(x="Preference to see the words...", title="OI preference by proficiency") +
+  geom_boxplot(data = OI_infl_df_ar,
+               aes(x=spelling.preference, y=prof_test_score),
+               width=0.15,
+               position = position_dodge(0.9))
 
 
 plot_arPref2 <- ggplot(data = OI_infl_df_ar) +
@@ -179,7 +183,11 @@ plot_arPref2 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Seeing the words in English...", title="English OI influence by proficiency")
+  labs(x="Seeing the words in English...", title="English OI influence by proficiency")+
+  geom_boxplot(data = OI_infl_df_ar,
+               aes(x=see_english, y=prof_test_score),
+               width=0.15,
+               position = position_dodge(0.9))
 
 plot_arPref3 <- ggplot(data = OI_infl_df_ar) +
   geom_jitter(mapping = aes(x=see_arabic, y=prof_test_score, color = see_arabic))+
@@ -187,7 +195,11 @@ plot_arPref3 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Seeing the words in Arabic...", title="Arabic OI influence by proficiency")
+  labs(x="Seeing the words in Arabic...", title="Arabic OI influence by proficiency")+
+  geom_boxplot(data = OI_infl_df_ar,
+               aes(x=see_arabic, y=prof_test_score),
+               width=0.15,
+               position = position_dodge(0.9))
 
 plot_arPref4 <- ggplot(data = OI_infl_df_ar) +
   geom_jitter(mapping = aes(x=no_spell, y=prof_test_score, color = no_spell))+
@@ -195,7 +207,11 @@ plot_arPref4 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Hearing the words without the spelling...", title="no OI influence by proficiency")
+  labs(x="Hearing the words without the spelling...", title="no OI influence by proficiency")+
+  geom_boxplot(data = OI_infl_df_ar,
+               aes(x=no_spell, y=prof_test_score),
+               width=0.15,
+               position = position_dodge(0.9))
 
 plot_arPref1 + plot_arPref2 + plot_arPref3 + plot_arPref4
 
