@@ -28,6 +28,8 @@ library(Cairo)
 library(ggwordcloud)
 library(DiagrammeR)
 library(treemap)
+library(igraph)
+library(ggraph)
 
 theme_set(theme_apa())
 
@@ -96,6 +98,28 @@ OI_infl_QCA$level = factor(OI_infl_QCA$level, levels = c("none", "beginner", "in
 
 ### RQ 2.1  Perception of OI influence in the study
 
+create diagram showing category hierarchy - can't get this to work right noW!
+
+```{r}
+categories<-data.frame(
+  level1=c( rep("OI helps",7), rep("OI doesn't help",3)),
+  level2=c( "learning", "remembering", rep("connect audio and visual input",3), "clarify what I heard", "rehearse words", "distracting (from sounds)", "better to ignore/focus on sounds", "unfamiliar"),
+  level3=c( "", "focus on first letter", "visualise words", "map sounds to letters", "associate word and image", "differentiate similar sounds/words", "", "", "", ""))
+
+# transform it to a edge list!
+edges_level1_2 <- categories %>% select(level1, level2) %>% unique %>% rename(from=level1, to=level2)
+edges_level2_3 <- categories %>% select(level2, level3) %>% unique %>% rename(from=level2, to=level3)
+edge_list=rbind(edges_level1_2, edges_level2_3)
+ 
+# Now we can plot that
+mygraph <- graph_from_data_frame( edge_list )
+ggraph(mygraph, layout = 'dendrogram', circular = FALSE) + 
+  geom_edge_diagonal() +
+  geom_node_point()+
+  theme_void()
+```
+
+
 #### Overall OI evaluation
 
 create new dataset removing responses that couldn't be coded for general evaluation of whether OI was helpful or not. 
@@ -104,6 +128,9 @@ create new dataset removing responses that couldn't be coded for general evaluat
 
 OI_infl1 <- OI_infl_QCA %>% 
   filter(general_influence1 != "")
+
+summary(OI_infl_QCA$L1)
+summary(OI_infl1$L1)
 ```
 
 ```{r OI-infl-table, echo=FALSE, message=FALSE, warning=FALSE}
@@ -349,5 +376,7 @@ treemap(infl_codes2EN,
         palette = cbPalette,
         title = "Treemap of L1 English percieved OI importance during early word learning",
             )
+
+
 
 ```
