@@ -98,7 +98,9 @@ plot_seeOI <- ggplot(data = OI_infl_df) +
   geom_bar(mapping = aes(x=see_OI, fill = L1))+
   theme_minimal() +
   facet_grid(.~L1)+
-  labs(x="When did you first notice the English or Arabic spelling?", y="Count", title="When participants first noticed OI by L1")
+  theme(legend.position = "none")+
+  labs(x="When did you first notice the English or Arabic spelling?", y="Count", title="When participants first noticed OI by L1") +
+  scale_x_discrete(breaks=c("start", "middle", "end", "no_see"), labels=c("start", "middle", "end", "didn't see"))
 
 plot_seeOI
 ```
@@ -124,7 +126,8 @@ plot_spellingPref <- ggplot(data = OI_infl_df) +
         axis.text.x = element_text(angle = 90))+
   facet_grid(.~L1)+
   scale_y_continuous(name="no. participants", limits = c(0,115))+
-  labs(x="Preference and see all of words…", y="Count", title="Overall spelling preference")
+  labs(x="Preference to learn all of words with…", y="Count", title="Overall spelling preference")+
+  scale_x_discrete(breaks=c("#N/A", "in_arabic", "in_english", "no_OI"), labels=c("n/a", "Arabic OI", "English OI", "audio-only"))
 
 
 plot_seeEnglish <- ggplot(data = OI_infl_df) +
@@ -134,27 +137,36 @@ plot_seeEnglish <- ggplot(data = OI_infl_df) +
         axis.text.x = element_text(angle = 90))+
   facet_grid(.~L1)+
   scale_y_continuous(name="no. participants", limits = c(0,115))+
-  labs(x="Seeing the words written in English letters…", y="Count", title="Percieved influence of English OI")
+  labs(x="Seeing English spelling…", y="Count", title="Influence of English OI")+
+  scale_x_discrete(breaks=c("difficult", "easier", "no_diff", "no_notice"), labels=c("difficult", "easier", "no difference", "didn't notice"))
 
 plot_seeArabic <- ggplot(data = OI_infl_df) +
   geom_bar(mapping = aes(x=see_arabic, fill = L1))+
   theme_minimal() +
   theme(legend.position = "none",
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
         axis.text.x = element_text(angle = 90))+
   facet_grid(.~L1)+
   scale_y_continuous(name="no. participants", limits = c(0,115))+
-  labs(x="Seeing the words written in Arabic letters…", y="Count", title="Percieved influence of Arabic OI")
+  labs(x="Seeing Arabic spelling…", y="Count", title="Influence of Arabic OI")+
+  scale_x_discrete(breaks=c("difficult", "easier", "no_diff", "no_notice"), labels=c("difficult", "easier", "no difference", "didn't notice"))
 
 plot_noSpell <- ggplot(data = OI_infl_df) +
   geom_bar(mapping = aes(x=no_spell, fill = L1))+
   theme_minimal() +
   theme(legend.position = "none",
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
         axis.text.x = element_text(angle = 90))+
   facet_grid(.~L1)+
   scale_y_continuous(name="no. participants", limits = c(0,115))+
-  labs(x="Hearing the words without the spelling…", y="Count", title="Percieved influence of no OI")
+  labs(x="Audio only…", y="Count", title="Influence of no OI")+
+  scale_x_discrete(breaks=c("difficult", "easier", "no_diff", "no_notice"), labels=c("difficult", "easier", "no difference", "didn't notice"))
 
-plot_spellingPref+plot_seeEnglish + plot_seeArabic + plot_noSpell
+plot_spellingPref
+
+plot_seeEnglish + plot_seeArabic + plot_noSpell
 
 ```
 
@@ -170,7 +182,8 @@ plot_arPref1 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Preference to see the words...", title="OI preference by proficiency") +
+  labs(x="Preference to learn all of words with…", title="OI preference by proficiency") +
+  scale_x_discrete(breaks=c("#N/A", "in_arabic", "in_english", "no_OI"), labels=c("n/a", "Arabic OI", "English OI", "audio-only"))+
   geom_boxplot(data = OI_infl_df_ar,
                aes(x=spelling.preference, y=prof_test_score),
                width=0.15,
@@ -183,7 +196,8 @@ plot_arPref2 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Seeing the words in English...", title="English OI influence by proficiency")+
+  labs(x="Seeing English spelling…", y="Count", title="Influence of English OI")+
+  scale_x_discrete(breaks=c("difficult", "easier", "no_diff", "no_notice"), labels=c("difficult", "easier", "no difference", "didn't notice"))+
   geom_boxplot(data = OI_infl_df_ar,
                aes(x=see_english, y=prof_test_score),
                width=0.15,
@@ -195,7 +209,8 @@ plot_arPref3 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Seeing the words in Arabic...", title="Arabic OI influence by proficiency")+
+  labs(x="Seeing Arabic spelling…", y="Count", title="Influence of Arabic OI")+
+  scale_x_discrete(breaks=c("difficult", "easier", "no_diff", "no_notice"), labels=c("difficult", "easier", "no difference", "didn't notice"))+
   geom_boxplot(data = OI_infl_df_ar,
                aes(x=see_arabic, y=prof_test_score),
                width=0.15,
@@ -207,13 +222,16 @@ plot_arPref4 <- ggplot(data = OI_infl_df_ar) +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90))+
   scale_y_continuous(name="Proficiency score", limits = c(0,12))+
-  labs(x="Hearing the words without the spelling...", title="no OI influence by proficiency")+
+ labs(x="Audio only…", y="Count", title="Influence of no OI")+
+  scale_x_discrete(breaks=c("difficult", "easier", "no_diff", "no_notice"), labels=c("difficult", "easier", "no difference", "didn't notice"))+
   geom_boxplot(data = OI_infl_df_ar,
                aes(x=no_spell, y=prof_test_score),
                width=0.15,
                position = position_dodge(0.9))
 
-plot_arPref1 + plot_arPref2 + plot_arPref3 + plot_arPref4
+plot_arPref1
+  
+plot_arPref2 + plot_arPref3 + plot_arPref4
 
 ```
 
@@ -225,8 +243,11 @@ plot_arPref1 + plot_arPref2 + plot_arPref3 + plot_arPref4
 plot_OI_import <- ggplot(data = OI_infl_df) +
   geom_bar(mapping = aes(x=OI.importance, fill = L1))+
   theme_minimal() +
+  theme(legend.position = "none")+
   facet_grid(.~L1)+
-  labs(title="In general, when learning new words do you think it is important to see the spelling the first time you hear it?")
+  labs(x="Early exposure to OI is important when learning new words", y="Count", title="When learning new words,is it important to see the spelling the first time you hear it?")+
+  scale_x_discrete(breaks=c("#N/A", "no", "yes"), labels=c("n/a", "no", "yes"))
+  
 
 plot_OI_import
 ```
